@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "project": "personal knowledge continuum",
+  "convention": {
+    "F": "feature reference",
+    "SPEC": "stable behavior and acceptance contract",
+    "P": "implementation plan reference",
+    "TC": "test criterion reference",
+    "STATUS": "implementation lifecycle state"
+  },
+  "status_values": [
+    "planned",
+    "in_progress",
+    "implemented",
+    "verified",
+    "blocked"
+  ],
+  "features": [
+    {
+      "id": "note-intelligence",
+      "F": "F-001",
+      "SPEC": "SPEC-001",
+      "P": "P-001",
+      "TC": ["TC-001"],
+      "name": "Structured note intelligence",
+      "description": "Extract note type, lifecycle, tags, links, questions, actions, relationships, duplicates, and contradictions into a reviewable queue.",
+      "spec": "AI suggestions must be additive, source-grounded, reviewable, and stored outside the Markdown source until approved.",
+      "plan": "Keep Markdown as the source of truth; analyze changed notes through ai_ref_sync; persist pending suggestions in SQLite; expose review IDs and approval actions.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Run note-intelligence and approval-loop tests",
+        "command": ["longddl-kb/venv/bin/python3", "-m", "pytest", "-q", "longddl-kb/tests/unit/test_note_intelligence.py", "longddl-kb/tests/unit/test_ai_ref_sync.py"]
+      }
+    },
+    {
+      "id": "ai-refinement",
+      "F": "F-002",
+      "SPEC": "SPEC-002",
+      "P": "P-002",
+      "TC": ["TC-002"],
+      "name": "AI's Ref refinement",
+      "description": "Generate a concise senior-level reflection that identifies one defensible, non-obvious optimization for a changed note.",
+      "spec": "Never paraphrase generic best practices; require mechanism, tradeoff, falsifiable experiment, and a condition where the optimization should not be used.",
+      "plan": "Run CDC refinement on new or changed notes, write an AI's Ref section, and index it as high-signal retrieval context.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Run AI-ref sync regression tests",
+        "command": ["longddl-kb/venv/bin/python3", "-m", "pytest", "-q", "longddl-kb/tests/unit/test_ai_ref_sync.py"]
+      }
+    },
+    {
+      "id": "smarter-rag-context",
+      "F": "F-003",
+      "SPEC": "SPEC-003",
+      "P": "P-003",
+      "TC": ["TC-003"],
+      "name": "AI-ref retrieval enrichment",
+      "description": "Use AI's Ref as a separate high-signal retrieval context while preserving the original note content.",
+      "spec": "AI-ref chunks must be labeled separately, carry a retrieval priority, and be removed through the same source-level CDC path.",
+      "plan": "Mark typed chunks with content_role=ai_ref and retrieval_priority=1.25; emit a companion vector in the legacy sync engine.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Run chunker, schema, and sync tests",
+        "command": ["longddl-kb/venv/bin/python3", "-m", "pytest", "-q", "longddl-kb/tests/unit/test_chunker.py", "longddl-kb/tests/unit/test_schema.py", "longddl-kb/tests/unit/test_sync.py"]
+      }
+    },
+    {
+      "id": "human-review-loop",
+      "F": "F-004",
+      "SPEC": "SPEC-004",
+      "P": "P-004",
+      "TC": ["TC-004"],
+      "name": "Human approval loop",
+      "description": "Deliver pending suggestions through Telegram and apply accepted structured metadata to Markdown notes.",
+      "spec": "Approval must use a stable review ID, reject stale notes, preserve prose, and allow rejection without source mutation.",
+      "plan": "Show IDs in daily review output; support /approve_ref and /reject_ref; re-index approved note changes through CDC.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Run note-intelligence approval tests",
+        "command": ["longddl-kb/venv/bin/python3", "-m", "pytest", "-q", "longddl-kb/tests/unit/test_note_intelligence.py"]
+      }
+    },
+    {
+      "id": "query-brain",
+      "F": "F-005",
+      "SPEC": "SPEC-005",
+      "P": "P-005",
+      "TC": ["TC-005"],
+      "name": "Published Query Brain",
+      "description": "Provide a browser query page for published brain notes only.",
+      "spec": "The public Jekyll query index must include only notes with published: true.",
+      "plan": "Generate a static browser index from the published brain collection and filter locally by text, type, and tag.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Check the published-only query template and browser script",
+        "command": ["bash", "-lc", "grep -q 'where: \"published\", true' blog-brain/query.md && node --check blog-brain/assets/js/brain-query.js"]
+      }
+    },
+    {
+      "id": "daily-life-quote",
+      "F": "F-006",
+      "SPEC": "SPEC-006",
+      "P": "P-006",
+      "TC": ["TC-006"],
+      "name": "Daily Vietnamese life quote",
+      "description": "Send one original, practical Vietnamese life quote through the existing scheduled Telegram workflow.",
+      "spec": "Output one concise quote grounded in the knowledge base, without attribution, filler, or story structure.",
+      "plan": "Keep the existing 11:00 Vietnam schedule and bot delivery path while changing the generator prompt and output contract.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Compile the Vietnamese daily quote generator",
+        "command": ["longddl-kb/venv/bin/python3", "-m", "py_compile", "longddl-kb/jobs/vietnamese_daily_story.py"]
+      }
+    },
+    {
+      "id": "spec-driven-agent-harness",
+      "F": "F-007",
+      "SPEC": "SPEC-007",
+      "P": "P-007",
+      "TC": ["TC-007"],
+      "name": "Spec-driven agent harness",
+      "description": "Synchronize agent instructions, hard constraints, task conventions, feature specifications, verification commands, and end-of-turn artifacts.",
+      "spec": "Agent work must use explicit F/SPEC/P/TC references, hard constraints, executable verification, and end-of-turn synchronization before handoff.",
+      "plan": "Provide AGENT_HARNESS.md, spec-driven agent configuration, reusable validation scripts, task-list conventions, and the end-of-turn-sync skill.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Validate the registry and agent harness scripts",
+        "command": ["python3", "-m", "py_compile", "scripts/validate_feature_list.py", "scripts/verify_feature.py"]
+      }
+    },
+    {
+      "id": "optimized-kb-sync-container",
+      "F": "F-008",
+      "SPEC": "SPEC-008",
+      "P": "P-008",
+      "TC": ["TC-008"],
+      "name": "Optimized knowledge-base sync container",
+      "description": "Build and run the longddl-kb sync pipeline from one Compose-managed CPU-only optimized image.",
+      "spec": "The main Compose file must use the optimized sync-pipeline image, the runtime must complete a CDC sync successfully, and the obsolete sync image must not remain.",
+      "plan": "Use a multi-stage Python build, install CPU-only PyTorch, cache the embedding model in the image, exclude build context noise, and reference the image from the main Compose file.",
+      "implementation_status": "verified",
+      "verification": {
+        "description": "Verify the Compose image, active container identity, clean exit, and optimized image presence",
+        "command": ["bash", "-lc", "test \"$(docker compose -f longddl-kb/docker-compose.yml config --images | grep '^longddl-kb-sync:optimized$')\" = 'longddl-kb-sync:optimized' && docker image inspect longddl-kb-sync:optimized >/dev/null && test \"$(docker inspect --format '{{.Config.Image}} {{.State.ExitCode}} {{.State.OOMKilled}}' longddl_sync_pipeline)\" = 'longddl-kb-sync:optimized 0 false' && ! docker image inspect longddl-kb_kb-sync:latest >/dev/null 2>&1"]
+      }
+    }
+  ]
+}
