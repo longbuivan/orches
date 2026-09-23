@@ -1,7 +1,7 @@
 # Spec-Driven Repository Agent Contract
 
 This repository uses `docs/feature-list.json` as the feature registry,
-`docs/task-list-convention.md` for task-record format and lifecycle rules,
+`docs/task-list-convention-convention.md` for task-record format and lifecycle rules,
 `scripts/validate_feature_list.py` as its registry validator, and the
 `end-of-turn-sync` skill for final tracking reconciliation.
 
@@ -9,7 +9,7 @@ Before implementation work:
 
 1. Read the feature registry and select the exact feature ID being changed.
 2. Set that feature to `in_progress` before editing.
-3. Read `docs/task-list-convention.md` before creating or updating a task
+3. Read `docs/task-list-convention-convention.md` before creating or updating a task
    record, and follow its `F/SPEC/P/TC` and checkbox rules exactly.
 4. Keep the feature's `spec` stable unless the user explicitly changes it.
 5. Prefer small, additive changes that preserve existing source-of-truth and
@@ -22,7 +22,7 @@ Before implementation work:
 
 Task-record discipline:
 
-- `docs/task-list-convention.md` is a rules/template document, not a task log.
+- `docs/task-list-convention-convention.md` is a rules/template document, not a task log.
 - Never append implementation-specific tasks, checkboxes, or verification
   results to the convention document.
 - Keep implementation tracking in the feature registry and the current task

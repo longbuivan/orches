@@ -121,7 +121,7 @@
       "name": "Spec-driven agent harness",
       "description": "Synchronize agent instructions, hard constraints, task conventions, feature specifications, verification commands, and end-of-turn artifacts.",
       "spec": "Agent work must use explicit F/SPEC/P/TC references, hard constraints, executable verification, and end-of-turn synchronization before handoff.",
-      "plan": "Provide AGENT_HARNESS.md, spec-driven agent configuration, reusable validation scripts, task-list conventions, and the end-of-turn-sync skill.",
+      "plan": "Provide AGENT_HARNESS.md, spec-driven agent configuration, reusable validation scripts, task-list-convention conventions, and the end-of-turn-sync skill.",
       "implementation_status": "verified",
       "verification": {
         "description": "Validate the registry and agent harness scripts",
